@@ -6,6 +6,7 @@ import json
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import logout
 
+from .models import CarMake, CarModel
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
@@ -87,3 +88,12 @@ def registration(request):
         response = {"status": "Failed", "message": "Only POST requests are allowed"}
 
     return JsonResponse(response)
+
+# View to get car data
+def get_cars(request):
+    count = CarMake.objects.filter().count()
+    if count == 0:
+        initiate()  # Populate the database if empty
+    car_models = CarModel.objects.select_related('car_make')
+    cars = [{"CarModel": car_model.name, "CarMake": car_model.car_make.name} for car_model in car_models]
+    return JsonResponse({"CarModels": cars})

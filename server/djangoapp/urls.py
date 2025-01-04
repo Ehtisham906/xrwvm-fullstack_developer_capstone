@@ -14,7 +14,10 @@ urlpatterns = [
     path(route='login', view=views.login_user, name='login'),
     #path fotr logout
     path('logout', views.logout_user, name='logout'),  # Add logout route
-    # path for registration
+    # path for get cars
+    
+    path(route='get_cars', view=views.get_cars, name ='getcars'),
+    
     # path for dealer reviews view
     # path for add a review view
 
