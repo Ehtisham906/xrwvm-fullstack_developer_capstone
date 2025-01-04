@@ -59,7 +59,7 @@ if ( curr_user !== null &&  curr_user !== "") {
                 <span class="navbar-text">
                   <div class="loginlink" id="loginlogout">
                   {home_page_items}
-                  </div>
+                  </div>s
                   </span>
               </div>
             </div>
