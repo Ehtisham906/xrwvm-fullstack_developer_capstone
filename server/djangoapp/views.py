@@ -5,6 +5,7 @@ import logging
 import json
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import logout
+from .restapis import get_request, analyze_review_sentiments, post_review
 
 from .models import CarMake, CarModel
 from .populate import initiate
@@ -99,3 +100,46 @@ def get_cars(request):
     car_models = CarModel.objects.select_related('car_make')
     cars = [{"CarModel": car_model.name, "CarMake": car_model.car_make.name} for car_model in car_models]
     return JsonResponse({"CarModels": cars})
+
+#Update the `get_dealerships` render list of dealerships all by default, particular state if state is passed
+def get_dealerships(request, state="All"):
+    if(state == "All"):
+        endpoint = "/fetchDealers"
+    else:
+        endpoint = "/fetchDealers/"+state
+    dealerships = get_request(endpoint)
+    return JsonResponse({"status":200,"dealers":dealerships})
+
+
+# Get dealer details by dealer_id
+def get_dealer_details(request, dealer_id):
+    if dealer_id:
+        endpoint = f"/fetchDealer/{dealer_id}"
+        dealership = get_request(endpoint)
+        return JsonResponse({"status": 200, "dealer": dealership})
+    else:
+        return JsonResponse({"status": 400, "message": "Bad Request"})
+
+# Get dealer reviews by dealer_id and analyze sentiments
+def get_dealer_reviews(request, dealer_id):
+    if dealer_id:
+        endpoint = f"/fetchReviews/dealer/{dealer_id}"
+        reviews = get_request(endpoint)
+        for review_detail in reviews:
+            response = analyze_review_sentiments(review_detail['review'])
+            review_detail['sentiment'] = response.get('sentiment', 'neutral')
+        return JsonResponse({"status": 200, "reviews": reviews})
+    else:
+        return JsonResponse({"status": 400, "message": "Bad Request"})
+
+
+def add_review(request):
+    if(request.user.is_anonymous == False):
+        data = json.loads(request.body)
+        try:
+            response = post_review(data)
+            return JsonResponse({"status":200})
+        except:
+            return JsonResponse({"status":401,"message":"Error in posting review"})
+    else:
+        return JsonResponse({"status":403,"message":"Unauthorized"})
