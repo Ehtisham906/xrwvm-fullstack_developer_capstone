@@ -1,8 +1,8 @@
+from django.db.utils import IntegrityError
+
 def initiate():
     print("Running the populate script...")
-
     try:
-        # CarMake data
         car_make_data = [
             {"name": "NISSAN", "description": "Great cars. Japanese technology"},
             {"name": "Mercedes", "description": "Great cars. German technology"},
@@ -11,12 +11,17 @@ def initiate():
             {"name": "Toyota", "description": "Great cars. Japanese technology"},
         ]
 
-        car_make_instances = [
-            CarMake.objects.create(name=data['name'], description=data['description'])
-            for data in car_make_data
-        ]
+        car_make_instances = []
+        for data in car_make_data:
+            obj, created = CarMake.objects.get_or_create(
+                name=data["name"], defaults={"description": data["description"]}
+            )
+            car_make_instances.append(obj)
+            if created:
+                print(f"Created CarMake: {obj.name}")
+            else:
+                print(f"CarMake already exists: {obj.name}")
 
-        # CarModel data
         car_model_data = [
             {"name": "Pathfinder", "type": "SUV", "year": 2023, "car_make": car_make_instances[0], "dealer_id": 1},
             {"name": "Qashqai", "type": "SUV", "year": 2023, "car_make": car_make_instances[0], "dealer_id": 2},
@@ -26,16 +31,20 @@ def initiate():
         ]
 
         for data in car_model_data:
-            CarModel.objects.create(
-                name=data['name'],
-                car_make=data['car_make'],
-                type=data['type'],
-                year=data['year'],
-                dealer_id=data['dealer_id']
+            car_model, created = CarModel.objects.get_or_create(
+                name=data["name"],
+                car_make=data["car_make"],
+                defaults={
+                    "type": data["type"],
+                    "year": data["year"],
+                    "dealer_id": data["dealer_id"],
+                },
             )
-            print(f"Created CarModel: {data['name']}")
+            if created:
+                print(f"Created CarModel: {car_model.name}")
+            else:
+                print(f"CarModel already exists: {car_model.name}")
 
         print("Data population completed successfully.")
-
     except Exception as e:
         print(f"An error occurred: {e}")
