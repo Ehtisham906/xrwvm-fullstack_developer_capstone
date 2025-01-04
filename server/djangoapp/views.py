@@ -1,5 +1,6 @@
 from django.http import JsonResponse
 from django.contrib.auth import login, authenticate
+from django.contrib.auth.models import User
 import logging
 import json
 from django.views.decorators.csrf import csrf_exempt
@@ -48,5 +49,41 @@ def logout_user(request):
             response = {"status": "Failed", "message": "An error occurred"}
     else:
         response = {"status": "Failed", "message": "Only GET requests are allowed"}
+
+    return JsonResponse(response)
+
+# Create a `registration` view to handle user registration
+@csrf_exempt
+def registration(request):
+    if request.method == "POST":
+        try:
+            # Parse user details from the JSON request body
+            data = json.loads(request.body)
+            username = data.get('userName')
+            password = data.get('password')
+            first_name = data.get('firstName')
+            last_name = data.get('lastName')
+            email = data.get('email')
+
+            # Check if username already exists
+            if User.objects.filter(username=username).exists():
+                response = {"userName": username, "error": "Already Registered"}
+            else:
+                # Create new user
+                user = User.objects.create_user(
+                    username=username,
+                    password=password,
+                    first_name=first_name,
+                    last_name=last_name,
+                    email=email
+                )
+                # Log in the new user
+                login(request, user)
+                response = {"userName": username, "status": "Authenticated"}
+        except Exception as e:
+            logger.error(f"Error during registration: {e}")
+            response = {"status": "Failed", "message": "An error occurred"}
+    else:
+        response = {"status": "Failed", "message": "Only POST requests are allowed"}
 
     return JsonResponse(response)
