@@ -13,10 +13,11 @@ class CarMake(models.Model):
         return self.name  # String representation of the CarMake object
 
 # CarModel model
-class CarModel(models.Model):  
+class CarModel(models.Model):
+    
     car_make = models.ForeignKey(CarMake, on_delete=models.CASCADE)  # Many-to-One relationship
     name = models.CharField(max_length=100)
-    
+
     # Choices for car types
     CAR_TYPES = [
         ('SEDAN', 'Sedan'),

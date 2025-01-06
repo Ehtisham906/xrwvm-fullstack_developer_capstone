@@ -147,7 +147,7 @@ const PostReview = () => {
 
         <div className="input_field">
           <label htmlFor="car-year">Car Year</label>
-          <br/>
+          <br />
           <input
             type="number"
             id="car-year"
