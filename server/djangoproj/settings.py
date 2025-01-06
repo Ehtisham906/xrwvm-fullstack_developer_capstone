@@ -31,7 +31,6 @@ DEBUG = True
 ALLOWED_HOSTS = [
     'localhost',
     'ehtishamzahi-8000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai',
-
 ]
 
 CSRF_TRUSTED_ORIGINS = [
@@ -61,7 +60,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    
 ]
 
 ROOT_URLCONF = 'djangoproj.urls'
