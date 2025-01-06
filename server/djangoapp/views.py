@@ -13,6 +13,7 @@ from .populate import initiate
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
+
 # Create a `login_user` view to handle sign-in requests
 @csrf_exempt
 def login_user(request):
