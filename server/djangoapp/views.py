@@ -30,12 +30,16 @@ def login_user(request):
                 login(request, user)
                 response = {"userName": username, "status": "Authenticated"}
             else:
-                response = {"status": "Failed", "message": "Invalid credentials"}
+                response = {"status":"Failed",
+                            "message": "Invalid credentials"}
         except Exception as e:
             logger.error(f"Error during login: {e}")
-            response = {"status": "Failed", "message": "An error occurred"}
+            response = {"status": "Failed",
+                        "message": "An error occurred"}
     else:
-        response = {"status": "Failed", "message": "Only POST requests are allowed"}
+        response = {"status": "Failed",
+                    "message": "Only POST requests are allowed"
+                    }
 
     return JsonResponse(response)
 
@@ -50,9 +54,11 @@ def logout_user(request):
             response = {"userName": "", "status": "Logged out"}
         except Exception as e:
             logger.error(f"Error during logout: {e}")
-            response = {"status": "Failed", "message": "An error occurred"}
+            response = {"status": "Failed",
+                        "message": "An error occurred"}
     else:
-        response = {"status": "Failed", "message": "Only GET requests are allowed"}
+        response = {"status": "Failed", 
+                    "message": "Only GET requests are allowed"}
 
     return JsonResponse(response)
 
@@ -72,7 +78,8 @@ def registration(request):
 
             # Check if username already exists
             if User.objects.filter(username=username).exists():
-                response = {"userName": username, "error": "Already Registered"}
+                response = {"userName": username, 
+                            "error": "Already Registered"}
             else:
                 # Create new user
                 user = User.objects.create_user(
@@ -84,12 +91,15 @@ def registration(request):
                 )
                 # Log in the new user
                 login(request, user)
-                response = {"userName": username, "status": "Authenticated"}
+                response = {"userName": username, 
+                            "status": "Authenticated"}
         except Exception as e:
             logger.error(f"Error during registration: {e}")
-            response = {"status": "Failed", "message": "An error occurred"}
+            response = {"status": "Failed",
+                        "message": "An error occurred"}
     else:
-        response = {"status": "Failed", "message": "Only POST requests are allowed"}
+        response = {"status": "Failed",
+                    "message": "Only POST requests are allowed"}
 
     return JsonResponse(response)
 
@@ -100,7 +110,8 @@ def get_cars(request):
     if count == 0:
         initiate()  # Populate the database if empty
     car_models = CarModel.objects.select_related('car_make')
-    cars = [{"CarModel": car_model.name, "CarMake": car_model.car_make.name} for car_model in car_models]
+    cars = [{"CarModel": car_model.name,
+             "CarMake": car_model.car_make.name} for car_model in car_models]
     return JsonResponse({"CarModels": cars})
 
 
@@ -111,7 +122,8 @@ def get_dealerships(request, state="All"):
     else:
         endpoint = f"/fetchDealers/{state}"
     dealerships = get_request(endpoint)
-    return JsonResponse({"status": 200, "dealers": dealerships})
+    return JsonResponse({"status": 200,
+                         "dealers": dealerships})
 
 
 # Get dealer details by dealer_id
@@ -119,9 +131,11 @@ def get_dealer_details(request, dealer_id):
     if dealer_id:
         endpoint = f"/fetchDealer/{str(dealer_id)}"
         dealership = get_request(endpoint)
-        return JsonResponse({"status": 200, "dealer": dealership})
+        return JsonResponse({"status": 200,
+                             "dealer": dealership})
     else:
-        return JsonResponse({"status": 400, "message": "Bad Request"})
+        return JsonResponse({"status": 400,
+                             "message": "Bad Request"})
 
 
 # Get dealer reviews by dealer_id and analyze sentiments
