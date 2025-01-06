@@ -29,8 +29,8 @@ def login_user(request):
                 # Log in the user
                 login(request, user)
                 response = {"userName": username, "status": "Authenticated"}
-            else: 
-                response = {"status":"Failed",
+            else:
+                response = {"status": "Failed",
                             "message": "Invalid credentials"}
         except Exception as e:
             logger.error(f"Error during login: {e}")
@@ -158,6 +158,7 @@ def add_review(request):
         data = json.loads(request.body)
         try:
             response = post_review(data)
+            print(response)
             return JsonResponse({"status": 200})
         except Exception as e:
             logger.error(f"Error in posting review: {e}")
