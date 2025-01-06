@@ -14,8 +14,10 @@ class CarMake(models.Model):
 
 # CarModel model
 class CarModel(models.Model):
-    
-    car_make = models.ForeignKey(CarMake, on_delete=models.CASCADE)  # Many-to-One relationship
+
+    car_make = models.ForeignKey(
+        CarMake, on_delete=models.CASCADE
+        )  # Many-to-One relationship
     name = models.CharField(max_length=100)
 
     # Choices for car types
@@ -26,13 +28,13 @@ class CarModel(models.Model):
         # Add more choices if necessary
     ]
     type = models.CharField(max_length=10, choices=CAR_TYPES, default='SUV')
-    dealer_id = models.IntegerField()  # Refers to a dealer created in Cloudant database
+    dealer_id = models.IntegerField()
     year = models.IntegerField(
         validators=[
-            MaxValueValidator(2023),  # Maximum year allowed
-            MinValueValidator(2015)  # Minimum year allowed
+            MaxValueValidator(2023),
+            MinValueValidator(2015)
         ]
     )
-    
+
     def __str__(self):
-        return f"{self.car_make.name} {self.name} ({self.year})"  # String representation of CarModel object
+        return f"{self.car_make.name} {self.name} ({self.year})"
