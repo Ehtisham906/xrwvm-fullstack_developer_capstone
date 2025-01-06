@@ -13,6 +13,7 @@ class CarMake(models.Model):
     def __str__(self):
         return self.name  # String representation of the CarMake object
 
+
 # CarModel model
 class CarModel(models.Model):
     car_make = models.ForeignKey(
