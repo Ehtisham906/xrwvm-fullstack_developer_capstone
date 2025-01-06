@@ -29,7 +29,7 @@ def login_user(request):
                 # Log in the user
                 login(request, user)
                 response = {"userName": username, "status": "Authenticated"}
-            else:
+            else: 
                 response = {"status":"Failed",
                             "message": "Invalid credentials"}
         except Exception as e:
@@ -57,7 +57,7 @@ def logout_user(request):
             response = {"status": "Failed",
                         "message": "An error occurred"}
     else:
-        response = {"status": "Failed", 
+        response = {"status": "Failed",
                     "message": "Only GET requests are allowed"}
 
     return JsonResponse(response)
@@ -78,7 +78,7 @@ def registration(request):
 
             # Check if username already exists
             if User.objects.filter(username=username).exists():
-                response = {"userName": username, 
+                response = {"userName": username,
                             "error": "Already Registered"}
             else:
                 # Create new user
@@ -91,7 +91,7 @@ def registration(request):
                 )
                 # Log in the new user
                 login(request, user)
-                response = {"userName": username, 
+                response = {"userName": username,
                             "status": "Authenticated"}
         except Exception as e:
             logger.error(f"Error during registration: {e}")
@@ -115,7 +115,7 @@ def get_cars(request):
     return JsonResponse({"CarModels": cars})
 
 
-# Update the `get_dealerships` render list of dealerships all by default, particular state if state is passed
+# Update the `get_dealerships` render list 
 def get_dealerships(request, state="All"):
     if state == "All":
         endpoint = "/fetchDealers"
